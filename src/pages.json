@@ -1,0 +1,56 @@
+{
+    "pages": [
+        {
+            "path": "pages/home/Index"
+        },
+        {
+            "path": "pages/category/Index"
+        },
+        {
+            "path": "pages/category/Details"
+        },
+        {
+            "path": "pages/preview/Index"
+        },
+        {
+            "path": "pages/user/Index"
+        }
+    ],
+    "globalStyle": {
+        "navigationStyle": "custom",
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "Wallpaper",
+        "navigationBarBackgroundColor": "#F8F8F8",
+        "backgroundColor": "#F8F8F8"
+    },
+    "easycom": {
+        "autoscan": true,
+        "custom": {
+            "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+        }
+    },
+    "tabBar": {
+        "list": [
+            {
+                "pagePath": "pages/home/Index",
+                "text": "首页",
+                "iconPath": "static/tabbar/home.png",
+                "selectedIconPath": "/static/tabbar/home-h.png"
+            },
+            {
+                "pagePath": "pages/category/Index",
+                "text": "分类",
+                "iconPath": "static/tabbar/classify.png",
+                "selectedIconPath": "static/tabbar/classify-h.png"
+            },
+            {
+                "pagePath": "pages/user/Index",
+                "text": "用户",
+                "iconPath": "static/tabbar/user.png",
+                "selectedIconPath": "static/tabbar/user-h.png"
+            }
+        ],
+        "color": "#999999",
+        "selectedColor": "#8cde9b"
+    }
+}

@@ -1,0 +1,10 @@
+.wallper-user,.wallper-home,.wallper-category {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0 30rpx 50rpx;
+    box-sizing: border-box;
+   background-image: 
+    linear-gradient(to bottom, transparent, #fff 400px),
+    linear-gradient(to right, #beecd8 20%, #f4e2d8);
+}
+
