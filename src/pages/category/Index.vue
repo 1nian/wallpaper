@@ -1,5 +1,6 @@
 <template>
     <view class="wallper-category">
+        <CommonBar title="分类" :border="false" statusBar fixed />
         <CommontList
             :scrollList="categoryList"
             :isMore="false"
@@ -13,6 +14,7 @@ import { ref } from "vue";
 import type { List, ListItem } from "@/type";
 import { getCategory } from "@/api/api";
 import CommontList from "@/components/CommontList.vue";
+import CommonBar from "@/components/CommonBar.vue";
 
 const categoryList = ref<List>([]);
 const queryCategory = async () => {
@@ -30,5 +32,7 @@ const gotoDetails = (item: ListItem) => {
 
 <style scoped lang="scss">
 .wallper-category {
+    width: 100%;
+    height: 100%;
 }
 </style>

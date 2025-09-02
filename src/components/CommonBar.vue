@@ -2,24 +2,18 @@
     <view class="common-bar">
         <!-- #ifdef H5 || APP -->
 
-        <uni-nav-bar
-            background-color="linear-gradient(to bottom, transparent, #fff 400px),
-            linear-gradient(to right, #beecd8 20%, #f4e2d8)"
-            :border="false"
-            statusBar
-            fixed
-        >
-            <template #left>
+        <uni-nav-bar v-bind="barAttrs">
+            <template #left v-if="barAttrs.title">
                 <view class="bar-left">
-                    {{ barTitle }}
+                    {{ barAttrs.title }}
                 </view>
             </template>
-            <view class="input-view">
+            <view class="input-view" v-if="barAttrs.title">
                 <uni-icons
                     class="input-uni-icon"
                     type="search"
                     size="18"
-                    color="#999"
+                    color="#8f939c"
                 />
                 <input
                     confirm-type="search"
@@ -33,25 +27,18 @@
         <!-- #endif -->
 
         <!-- #ifdef MP-WEIXIN -->
-        <uni-nav-bar
-            :title="barTitle"
-            backgroundColor="linear-gradient(to bottom, transparent, #fff 400px),
-            linear-gradient(to right, #beecd8 20%, #f4e2d8)"
-            :height="0"
-            fixed
-            statusBar
-        >
-            <template #left>
+        <uni-nav-bar v-bind="barAttrs">
+            <template #left v-if="barAttrs.title">
                 <view class="bar-left">
-                    {{ barTitle }}
+                    {{ barAttrs.title }}
                 </view>
             </template>
-            <view class="input-view">
+            <view class="input-view" v-if="barAttrs.title">
                 <uni-icons
                     class="input-uni-icon"
                     type="search"
                     size="18"
-                    color="#999"
+                    color="#8f939c"
                 />
                 <input
                     confirm-type="search"
@@ -67,9 +54,13 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-    barTitle: string;
-}>();
+import { useAttrs, computed } from "vue";
+
+const attrs = useAttrs();
+
+const barAttrs = computed(() => {
+    return attrs;
+});
 
 const searchClick = () => {
     // log
@@ -82,10 +73,6 @@ $nav-height: 60rpx;
 .common-bar {
     width: 100%;
     height: 100%;
-    :deep(.uni-navbar__header) {
-        background: linear-gradient(to bottom, transparent, #fff 400px),
-            linear-gradient(to right, #beecd8 20%, #f4e2d8);
-    }
 
     .bar-left {
         display: flex;

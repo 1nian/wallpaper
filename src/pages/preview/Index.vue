@@ -131,7 +131,7 @@ const downloadClick = async () => {
 
 const queryCategoryDetails = async (id: string) => {
     const res = await getCategoryDetails<ListItem>(id);
-    categoryDetails.value = res[0];
+    categoryDetails.value = res?.[0] ?? {};
 };
 
 onLoad((options: any) => {

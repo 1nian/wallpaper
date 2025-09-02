@@ -25,9 +25,13 @@ export const getCategory = <T>() => {
 };
 
 // 壁纸分类详情
-export const getWallpaperDetails = <T>(id: string) => {
+export const getWallpaperDetails = <T>(
+    id: string,
+    pageNum: number = 1,
+    pageSize: number = 12
+) => {
     return request<T>(
-        `https://tea.qingnian8.com/api/bizhi/wallList?classid=${id}`
+        `https://tea.qingnian8.com/api/bizhi/wallList?classid=${id}&pageNum=${pageNum}&pageSize=${pageSize}`
     );
 };
 

@@ -1,6 +1,6 @@
 <template>
     <view class="wallper-home">
-        <CommonBar barTitle="首页" />
+        <CommonBar title="首页" :border="false" statusBar fixed />
 
         <!-- 轮播图 -->
         <view class="banner">

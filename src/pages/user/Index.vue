@@ -1,5 +1,6 @@
 <template>
     <view class="wallper-user">
+        <CommonBar :border="false" statusBar />
         <view class="header">
             <image src="@/static/logo.png" mode="scaleToFill" />
             <view class="address">地址</view>
@@ -60,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+import CommonBar from "@/components/CommonBar.vue";
 import LineView from "./Line.vue";
 
 const userContact = (e: any) => {
