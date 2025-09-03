@@ -40,6 +40,7 @@ import { ref, reactive } from "vue";
 import { onLoad, onReachBottom } from "@dcloudio/uni-app";
 import type { List, ListItem } from "@/type";
 import { getWallpaperDetails } from "@/api/api";
+import { setCategoryDetailsList } from "@/utils/storage";
 import CommontList from "@/components/CommontList.vue";
 import CommonBar from "@/components/CommonBar.vue";
 
@@ -77,6 +78,15 @@ const queryCategory = async (
         categoryList.value = [...categoryList.value, ...res];
     } else {
         categoryList.value = res ?? [];
+    }
+
+    // 存储数据数组到本地
+    if (res && res.length > 0) {
+        const processedList = res.map((item) => ({
+            ...item,
+            picUrl: item.smallPicurl?.replace("_small.webp", ".jpg"),
+        }));
+        setCategoryDetailsList("category-list", processedList);
     }
 
     // 更新分页信息

@@ -1,10 +1,15 @@
 <template>
     <view class="preview">
+        {{ preloadList }}
         <swiper circular @change="swiperChange">
-            <swiper-item v-for="item in 5" :key="item">
+            <swiper-item
+                v-for="(item, index) in categoryDetailsList"
+                :key="item._id"
+            >
                 <image
+                    v-if="preloadList.includes(index)"
                     @click="isMask = !isMask"
-                    :src="categoryDetails?.smallPicurl"
+                    :src="item.picUrl"
                     mode="scaleToFill"
                 />
             </swiper-item>
@@ -14,7 +19,7 @@
             <view class="back" @click="backClick">
                 <uni-icons type="left" color="#fff" size="24" />
             </view>
-            <view class="dian">{{ current }} / {{ total }}</view>
+            <view class="dian">{{ current + 1 }} / {{ total }}</view>
             <view class="date-time">
                 <uni-dateformat
                     :date="new Date()"
@@ -88,30 +93,72 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import type { SwiperOnChangeEvent } from "@uni-helper/uni-app-types";
 import type { UniPopup } from "@uni-helper/uni-ui-types";
 import { getCategoryDetails } from "@/api/api";
 import { onLoad } from "@dcloudio/uni-app";
 import type { ListItem } from "@/type";
-import { downloadAndSaveImage } from "@/utils/download";
+import { downloadAndSaveImage, preloadImage } from "@/utils/download";
+import { getCategoryDetailsList } from "@/utils/storage";
 
+const categoryDetailsList = ref<ListItem[]>([]);
 const categoryDetails = ref<ListItem>();
+
+// 预加载图片
+const preloadList = ref<number[]>([]);
+
+const queryCategoryDetails = async (id: string) => {
+    // 优先从本地存储的数据数组中查找
+    const localData = getCategoryDetailsList("category-list");
+
+    if (localData) {
+        categoryDetailsList.value = localData ?? [];
+
+        total.value = categoryDetailsList.value.length;
+
+        current.value = categoryDetailsList.value.findIndex(
+            (item: ListItem) => item._id === id
+        );
+
+        // 图片预加载
+        preloadList.value = preloadImage(current.value, total.value);
+
+        categoryDetails.value = categoryDetailsList.value.find(
+            (item) => item._id === id
+        );
+
+        return;
+    }
+
+    // 如果本地没有数据，再发送请求
+    // const res = await getCategoryDetails<ListItem>(id);
+    // categoryDetails.value = res?.[0] ?? {};
+};
+
+onLoad((options: any) => {
+    queryCategoryDetails(options.id);
+});
 
 const isMask = ref(true);
 
-const current = ref(1);
-const total = ref(5);
+const current = ref(0);
+const total = ref(0);
 
 const swiperChange = (e: SwiperOnChangeEvent) => {
-    current.value = e.detail.current + 1;
+    current.value = e.detail.current;
+
+    // 图片预加载
+    preloadList.value = preloadImage(current.value, total.value);
+
+    categoryDetails.value = categoryDetailsList.value[e.detail.current];
 };
 
 const previewPopup = ref<UniPopup>();
 
 // 下载
 const downloadClick = async () => {
-    if (!categoryDetails.value?.smallPicurl) {
+    if (!categoryDetails.value?.picUrl) {
         uni.showToast({
             title: "图片地址无效",
             icon: "none",
@@ -120,23 +167,13 @@ const downloadClick = async () => {
     }
 
     const success = await downloadAndSaveImage({
-        url: categoryDetails.value.smallPicurl,
-        fileName: `wallpaper_${categoryDetails.value._id}.jpg`,
+        url: categoryDetails.value.picUrl,
     });
 
     if (!success) {
         console.error("下载保存失败");
     }
 };
-
-const queryCategoryDetails = async (id: string) => {
-    const res = await getCategoryDetails<ListItem>(id);
-    categoryDetails.value = res?.[0] ?? {};
-};
-
-onLoad((options: any) => {
-    queryCategoryDetails(options.id);
-});
 
 const backClick = () => {
     uni.navigateBack();
