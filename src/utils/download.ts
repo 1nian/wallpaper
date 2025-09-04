@@ -180,30 +180,3 @@ const performDownload = (
         },
     });
 };
-
-/**
- * 图片预加载
- * @param index 图片配置数据下标
- * @param total 图片配置数据总长度
- */
-export const preloadImage = (index: number, total: number): number[] => {
-    // 参数验证
-    if (total <= 0) return [];
-    if (index < 0 || index >= total) return [];
-
-    const list: number[] = [];
-
-    // 添加前一张图片索引
-    const prevIndex = index - 1 >= 0 ? index - 1 : 0;
-    list.push(prevIndex);
-
-    // 添加当前图片索引
-    list.push(index);
-
-    // 添加后一张图片索引
-    const nextIndex = index + 1 < total ? index + 1 : total - 1;
-    list.push(nextIndex);
-
-    // 去重并返回
-    return [...new Set(list)];
-};

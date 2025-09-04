@@ -1,7 +1,6 @@
 <template>
     <view class="preview">
-        {{ preloadList }}
-        <swiper circular @change="swiperChange">
+        <swiper circular @change="swiperChange" :current="current">
             <swiper-item
                 v-for="(item, index) in categoryDetailsList"
                 :key="item._id"
@@ -99,7 +98,7 @@ import type { UniPopup } from "@uni-helper/uni-ui-types";
 import { getCategoryDetails } from "@/api/api";
 import { onLoad } from "@dcloudio/uni-app";
 import type { ListItem } from "@/type";
-import { downloadAndSaveImage, preloadImage } from "@/utils/download";
+import { downloadAndSaveImage } from "@/utils/download";
 import { getCategoryDetailsList } from "@/utils/storage";
 
 const categoryDetailsList = ref<ListItem[]>([]);
@@ -107,6 +106,22 @@ const categoryDetails = ref<ListItem>();
 
 // 预加载图片
 const preloadList = ref<number[]>([]);
+
+const preloadImage = (index: number, total: number): number[] => {
+    // 添加前一张图片索引
+    const prevIndex = index - 1 < 0 ? total - 1 : index - 1;
+    preloadList.value.push(prevIndex);
+
+    // 添加当前图片索引
+    preloadList.value.push(index);
+
+    // 添加后一张图片索引
+    const nextIndex = index + 1 >= total ? 0 : index + 1;
+    preloadList.value.push(nextIndex);
+
+    // 去重并返回
+    return [...new Set(preloadList.value)];
+};
 
 const queryCategoryDetails = async (id: string) => {
     // 优先从本地存储的数据数组中查找
@@ -124,9 +139,7 @@ const queryCategoryDetails = async (id: string) => {
         // 图片预加载
         preloadList.value = preloadImage(current.value, total.value);
 
-        categoryDetails.value = categoryDetailsList.value.find(
-            (item) => item._id === id
-        );
+        categoryDetails.value = categoryDetailsList.value[current.value];
 
         return;
     }
